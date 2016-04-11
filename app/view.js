@@ -16,8 +16,17 @@ let view = {
     },
 
     ready: (model, actions) => {
+        let mainContent = theme.home();
+
+        if(model.route === "contacts") {
+            mainContent = theme.contactList({});
+        } else if(model.route === "about") {
+            mainContent = theme.about();
+        }
+
         return h("div.app-container", [
-            theme.header()
+            theme.header(model.appName, model.menu, actions),
+            mainContent
         ]);
     },
 

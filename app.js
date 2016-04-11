@@ -1,11 +1,12 @@
 "use strict";
 
-let binder = require("./app/binder");
+require("babel-polyfill");
+
+let binder = require("./app/main");
 let state = require("./app/state");
 let model = require("./app/model");
 let actions = require("./app/actions");
 let view = require("./app/view");
+let services = require("./app/services");
 
-binder(state, model, actions);
-
-view.display(view.init(model.init(), actions));
+binder.run(state, actions, model, view, services);

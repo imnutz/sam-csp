@@ -3,7 +3,7 @@
 let csp = require("js-csp");
 
 let take = csp.take,
-    put = csp.put,
+    putAsync = csp.putAsync,
     go = csp.go;
 
 let chIn = csp.chan(),
@@ -12,24 +12,37 @@ let chIn = csp.chan(),
 let model = {
     appName: "Contact Manager",
     appDescription: "with SAM and CSP",
+
     menu: [
         { title: "Contacts", route: "contacts"},
-        { title: "About", route: "route" }
+        { title: "About", route: "about" }
     ],
 
-    route: "home"
+    route: "home",
+    contacts: []
 };
 
-go(function*() {
+let _services;
+
+const setUp = (services) => _services = services;
+const init = () => model;
+
+go(function* present() {
     while(true) {
+        let contacts;
         let data = yield take(chIn);
 
         if(data.route) {
             model.route = data.route;
         }
 
-        put(chOut, model);
+        if(model.route === "contacts") {
+            contacts = yield take(_services.fetchContacts());
+            model.contacts = contacts || [];
+        }
+
+        putAsync(chOut, model);
     }
 });
 
-module.exports = { in: chIn, out: chOut };
+module.exports = { in: chIn, out: chOut, init, setUp };
