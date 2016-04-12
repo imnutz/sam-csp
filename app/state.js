@@ -11,7 +11,7 @@ let state = {
         _view = view;
         _actions = actions; 
 
-        go(function*() {
+        go(function* render() {
             while(true) {
                 let model = yield take(channel);
 

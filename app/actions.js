@@ -11,7 +11,16 @@ let actions = {
 
     selectRoute: (route) => {
         putAsync(_channel, { route: route });
-    }
+    },
+
+    edit: (id) => {
+        putAsync(_channel, {
+            editedId: id,
+            route: "editForm"
+        });
+    },
+
+    delete: (id) => {}
 };
 
 module.exports = actions;

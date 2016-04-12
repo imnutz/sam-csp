@@ -39,6 +39,13 @@ go(function* present() {
         if(model.route === "contacts") {
             contacts = yield take(_services.fetchContacts());
             model.contacts = contacts || [];
+        } else if(model.route === "editForm") {
+            model.editedId = data.editedId;
+            contact = yield take(_services.fetchContact(model.editedId));
+
+            if(!contact instanceof Error) {
+                model.contact = contact;
+            } 
         }
 
         putAsync(chOut, model);

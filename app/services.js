@@ -22,4 +22,18 @@ const fetchContacts = () => {
     return channel;
 };
 
+const fetchContact = (id) => {
+    let channel = csp.chan();
+
+    reqwest([CONTACTS_URL, id].join("/"))
+        .then((response) => {
+            putAsync(channel, response)
+        })
+        .catch((e) => {
+            putAsync(channel, new Error("Failed to fetch contact with id = " + id));
+        });
+
+    return channel;
+};
+
 module.exports = { fetchContacts };

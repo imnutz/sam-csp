@@ -19,7 +19,7 @@ let view = {
         let mainContent = theme.home();
 
         if(model.route === "contacts") {
-            mainContent = theme.contactList({});
+            mainContent = theme.contactList(model.contacts, actions);
         } else if(model.route === "about") {
             mainContent = theme.about();
         }
