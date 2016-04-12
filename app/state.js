@@ -15,14 +15,21 @@ let state = {
             while(true) {
                 let model = yield take(channel);
 
-                let representation = state.representation(model);
-                _view.display(representation);
+                state.representation(model);
+                state.nap(model);
             }
         })
     },
 
     representation: (model) => {
-        return _view.ready(model, _actions);
+        let representation = _view.ready(model, _actions);
+        _view.display(representation);
+    },
+
+    nap: (model) => {
+        if(model.updatingDone || model.addingDone || model.cancelledForm || model.deletingDone) {
+            _actions.selectRoute("contacts");
+        }
     }
 };
 

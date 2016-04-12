@@ -22,11 +22,16 @@ let view = {
             mainContent = theme.contactList(model.contacts, actions);
         } else if(model.route === "about") {
             mainContent = theme.about();
+        } else if(model.route === "editForm") {
+            mainContent = theme.edit(model.contact, actions);
+        } else if(model.route === "addForm") {
+            mainContent = theme.add({}, actions);
         }
 
         return h("div.app-container", [
             theme.header(model.appName, model.menu, actions),
-            mainContent
+            mainContent,
+            theme.footer()
         ]);
     },
 

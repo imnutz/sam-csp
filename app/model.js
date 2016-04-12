@@ -19,7 +19,12 @@ let model = {
     ],
 
     route: "home",
-    contacts: []
+    contacts: [],
+
+    updatingDone: false,
+    addingDone: false,
+    cancelledForm: false,
+    deletingDone: false
 };
 
 let _services;
@@ -36,16 +41,57 @@ go(function* present() {
             model.route = data.route;
         }
 
+        model.updatingDone = data.updatingDone || false;
+        model.addingDone = data.addingDone || false;
+        model.cancelledForm = data.cancelledForm || false;
+        model.deletingDone = data.deletingDone || false;
+
         if(model.route === "contacts") {
             contacts = yield take(_services.fetchContacts());
             model.contacts = contacts || [];
         } else if(model.route === "editForm") {
             model.editedId = data.editedId;
-            contact = yield take(_services.fetchContact(model.editedId));
+            model.contact = yield take(_services.fetchContact(model.editedId));
+        } else if(model.route === "update") {
+            let updateResponse = yield take(_services.updateContact({
+                id: data.id,
+                firstName: data.firstName,
+                lastName: data.lastName
+            }));
 
-            if(!contact instanceof Error) {
-                model.contact = contact;
-            } 
+            if(updateResponse instanceof Error) {
+                model.updatingDone = false;
+            } else {
+                model.updatingDone = true;
+            }
+        } else if(model.route === "save") {
+            let addingResponse = yield take(_services.createContact({
+                firstName: data.firstName,
+                lastName: data.lastName
+            }));
+
+            if(addingResponse instanceof Error) {
+                model.addingDone = false;
+            } else {
+                model.addingDone = true;
+            }
+        } else if(model.route === "cancelForm") {
+            model.cancelledForm = true;
+        } else if(model.route === "delete") {
+            model.deletedId = data.id;
+
+            let confirmation = confirm("Do your really want to delete the contact?");
+            if(confirmation) {
+                let deleteResponse = yield take(_services.deleteContact(model.deletedId));
+
+                if(deleteResponse instanceof Error) {
+                    model.deletingDone = false;
+                } else {
+                    model.deletingDone = true;
+                }
+            } else {
+                model.deletingDone = true;
+            }
         }
 
         putAsync(chOut, model);

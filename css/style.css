@@ -1,0 +1,95 @@
+body, h1, h2, h3, ul {
+    padding: 0;
+    margin: 0;
+}
+
+ul {
+    list-style: none;
+}
+
+a, a:hover {
+    text-decoration: none;
+}
+
+.app-container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.app-container .footer {
+    margin-top: 15px;
+    border-top: 1px solid black;
+}
+.app-container .footer p {
+    font-style: italic;
+    font-size: small;
+}
+
+.app-container .header {
+    display: flex;
+    padding: 15px 0;
+    border-bottom: 1px solid black;
+}
+.app-container .header ul {
+    display: flex;
+    min-width: 200px;
+    margin-left: 30px;
+    align-content: space-between;
+    align-items: center;
+}
+
+.app-container .header li {
+    display: block;
+    width: 80px;
+}
+
+.app-container .main-content {
+    padding: 15px 0;
+}
+
+.app-container .contact-list .data-list-header {
+    padding: 15px;
+    border: 1px solid gray;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    margin: 10px 0;
+}
+
+.form-field {
+    padding: 5px 0;
+    display: flex;
+    align-items: center;
+}
+
+.form-field label {
+    width: 120px; 
+}
+.form-field input[type="text"] {
+    padding: 8px 5px;
+    width: 200px;
+    font-size: 18px;
+}
+
+.form .btns {
+    padding: 5px 0 5px 120px;
+}
+.form .btns button:not(:first-child) {
+    margin: 0 15px;
+}
+
+.app-container button {
+    width: 80px;
+    height: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid gray;
+}
+
+table td,
+table th {
+    border: 1px solid gray;
+    padding: 5px;
+}
