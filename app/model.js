@@ -19,83 +19,53 @@ let model = {
     ],
 
     route: "home",
-    contacts: [],
 
-    updatingDone: false,
-    addingDone: false,
-    cancelledForm: false,
-    deletingDone: false
+    contacts: []
 };
 
 let _services;
 
-const setUp = (services) => _services = services;
 const init = () => model;
 
 go(function* present() {
     while(true) {
-        let contacts;
         let data = yield take(chIn);
 
         if(data.route) {
             model.route = data.route;
         }
 
-        model.updatingDone = data.updatingDone || false;
-        model.addingDone = data.addingDone || false;
-        model.cancelledForm = data.cancelledForm || false;
-        model.deletingDone = data.deletingDone || false;
+        model.fetchingContacts = data.fetchingContacts || false;
+        model.contacts = data.contacts || [];
 
-        if(model.route === "contacts") {
-            contacts = yield take(_services.fetchContacts());
-            model.contacts = contacts || [];
-        } else if(model.route === "editForm") {
-            model.editedId = data.editedId;
-            model.contact = yield take(_services.fetchContact(model.editedId));
-        } else if(model.route === "update") {
-            let updateResponse = yield take(_services.updateContact({
-                id: data.id,
-                firstName: data.firstName,
-                lastName: data.lastName
-            }));
+        model.editedId = data.editedId;
+        model.fetchingContact = data.fetchingContact;
 
-            if(updateResponse instanceof Error) {
-                model.updatingDone = false;
+        model.creatingContact = data.creatingContact;
+        model.contactCreated = data.contactCreated;
+
+        model.updatingContact = data.updatingContact;
+        model.contactUpdated = data.contactUpdated;
+
+        model.deletingContact = data.deletingContact;
+        model.contactDeleted = data.contactDeleted;
+        model.deletedId = data.deletedId;
+        model.cancelCrud = data.cancelCrud;
+
+        if(model.deletingContact) {
+            let confirm = window.confirm("Do you really want to delete this contact?");
+            if(confirm) {
+                model.okForDeleting = true;
             } else {
-                model.updatingDone = true;
-            }
-        } else if(model.route === "save") {
-            let addingResponse = yield take(_services.createContact({
-                firstName: data.firstName,
-                lastName: data.lastName
-            }));
-
-            if(addingResponse instanceof Error) {
-                model.addingDone = false;
-            } else {
-                model.addingDone = true;
-            }
-        } else if(model.route === "cancelForm") {
-            model.cancelledForm = true;
-        } else if(model.route === "delete") {
-            model.deletedId = data.id;
-
-            let confirmation = confirm("Do your really want to delete the contact?");
-            if(confirmation) {
-                let deleteResponse = yield take(_services.deleteContact(model.deletedId));
-
-                if(deleteResponse instanceof Error) {
-                    model.deletingDone = false;
-                } else {
-                    model.deletingDone = true;
-                }
-            } else {
-                model.deletingDone = true;
+                model.okForDeleting = false;
+                model.cancelCrud = true;
             }
         }
+
+        model.contact = data.contact;
 
         putAsync(chOut, model);
     }
 });
 
-module.exports = { in: chIn, out: chOut, init, setUp };
+module.exports = { in: chIn, out: chOut, init };
