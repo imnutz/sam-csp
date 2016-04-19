@@ -2,6 +2,7 @@
 ### A contact manager web application built with SAM and CSP(Communicating Sequential Processes)
 
 [SAM](http://sam.js.org)
+
 [A CSP tutorial](http://jlongster.com/Taming-the-Asynchronous-Beast-with-CSP-in-JavaScript)
 
 ## Run
