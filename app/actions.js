@@ -28,11 +28,7 @@ let actions = {
 
     selectRoute: (route) => {
         let data = {
-            route: route,
-            contactCreated: false,
-            contactUpdated: false,
-            contactDeleted: false,
-            cancelCrud: false
+            route: route
         };
 
         if(route === "contacts") {

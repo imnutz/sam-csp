@@ -24,7 +24,7 @@ let state = {
     },
 
     representation: (model) => {
-        let content = theme.home();
+        let content = "";
 
         if(model.route === "contacts" && model.contacts.length) {
             content = theme.contactList(model.contacts || [], _actions);

@@ -41,6 +41,7 @@ go(function* present() {
             model.contactCreated = false;
             model.contactUpdated = false;
             model.contactDeleted = false;
+            model.cancelCrud = false;
 
             model.contacts = yield take(_services.fetchContacts());
         }
@@ -82,7 +83,7 @@ go(function* present() {
                 model.contactDeleted = true;
             }
         }
-        
+
         putAsync(chOut, model);
     }
 });
