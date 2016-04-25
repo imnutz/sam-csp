@@ -50,25 +50,8 @@ let state = {
     },
 
     nap: (model) => {
-        if(model.fetchingContacts) {
-            _actions.fetchContacts();
-        } else if(model.fetchingContact) {
-            _actions.fetchContact(model.editedId);
-        } else if(model.creatingContact) {
-            _actions.createContact({
-                firstName: model.contact.firstName,
-                lastName: model.contact.lastName
-            });
-        } else if(state.doneCrud(model)) {
+        if(state.doneCrud(model)) {
             _actions.selectRoute("contacts");
-        } else if(model.updatingContact) {
-            _actions.updateContact({
-                id: model.contact.id,
-                firstName: model.contact.firstName,
-                lastName: model.contact.lastName
-            });
-        } else if(model.deletingContact && model.okForDeleting) {
-            _actions.deleteContact(model.deletedId);
         }
     }
 };

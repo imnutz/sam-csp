@@ -8,9 +8,8 @@ let _channel,
     _services;
 
 let actions = {
-    init: (channel, services) => {
+    init: (channel) => {
         _channel = channel;
-        _services = services;
     },
 
     selectContactList: (data = {}) => {
@@ -48,8 +47,7 @@ let actions = {
     edit: (id) => {
         putAsync(_channel, {
             editedId: id,
-            route: "editForm",
-            fetchingContact: true
+            route: "editForm"
         });
     },
 
@@ -82,8 +80,7 @@ let actions = {
     delete: (id) => {
         let data = {
             deletedId: id,
-            route: "delete",
-            deletingContact: true
+            route: "delete"
         };
 
         putAsync(_channel, data);
@@ -91,56 +88,6 @@ let actions = {
 
     cancelForm: () => {
         putAsync(_channel, { route: "cancelForm", cancelCrud: true });
-    },
-
-    fetchContacts: () => {
-        csp.go(function*() {
-            let contacts = yield take(_services.fetchContacts());
-            putAsync(_channel, { contacts: contacts, fetchingContacts: false, contactListSelected: true })
-        });
-    },
-
-    fetchContact: (id) => {
-        csp.go(function*() {
-            let contact = yield take(_services.fetchContact(id));
-
-            putAsync(_channel, { contact: contact, fetchingContact: false });
-        });
-    },
-
-    createContact: (data = {}) => {
-        csp.go(function*() {
-            let response = yield take(_services.createContact(
-                {
-                    firstName: data.firstName,
-                    lastName: data.lastName
-                }
-            ));
-
-            putAsync(_channel, { contactCreated: true, creatingContact: false });
-        });
-    },
-
-    updateContact: (data = {}) => {
-        csp.go(function*() {
-            let response = yield take(_services.updateContact(
-                {
-                    id: data.id,
-                    firstName: data.firstName,
-                    lastName: data.lastName
-                }
-            ));
-
-            putAsync(_channel, { contactUpdated: true, updatingContact: false });
-        });
-    },
-
-    deleteContact: (id) => {
-        csp.go(function*() {
-            let response = yield take(_services.deleteContact(id));
-
-            putAsync(_channel, { contactDeleted: true, deletingContact: false });
-        });       
     }
 };
 

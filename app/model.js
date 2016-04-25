@@ -24,7 +24,7 @@ let model = {
 };
 
 let _services;
-
+const setServices = (services) => _services = services;
 const init = () => model;
 
 go(function* present() {
@@ -35,37 +35,82 @@ go(function* present() {
             model.route = data.route;
         }
 
-        model.fetchingContacts = data.fetchingContacts || false;
-        model.contacts = data.contacts || [];
-
-        model.editedId = data.editedId;
-        model.fetchingContact = data.fetchingContact;
-
-        model.creatingContact = data.creatingContact;
-        model.contactCreated = data.contactCreated;
-
-        model.updatingContact = data.updatingContact;
-        model.contactUpdated = data.contactUpdated;
-
-        model.deletingContact = data.deletingContact;
-        model.contactDeleted = data.contactDeleted;
-        model.deletedId = data.deletedId;
         model.cancelCrud = data.cancelCrud;
 
-        if(model.deletingContact) {
-            let confirm = window.confirm("Do you really want to delete this contact?");
-            if(confirm) {
-                model.okForDeleting = true;
-            } else {
-                model.okForDeleting = false;
-                model.cancelCrud = true;
+        if (data.fetchingContacts) {
+            model.contactCreated = false;
+            model.contactUpdated = false;
+            model.contactDeleted = false;
+
+            model.contacts = yield take(_services.fetchContacts());
+        }
+
+        if(data.creatingContact) {
+            let response = yield take(_services.createContact(
+                {
+                    firstName: data.firstName,
+                    lastName: data.lastName
+                }
+            ));
+
+            model.contactCreated = true;
+        }
+
+        if(data.editedId) {
+            model.editedId = data.editedId;
+            model.contact = yield take(_services.fetchContact(model.editedId));
+        }
+
+        if(data.updatingContact) {
+            let response = yield take(_services.updateContact(
+                {
+                    id: data.id,
+                    firstName: data.firstName,
+                    lastName: data.lastName
+                }
+            ));
+
+            model.contactUpdated = true;
+        }
+
+        if(data.deletedId) {
+            model.deletedId = data.deletedId;
+
+            let confirmation = window.confirm("Do you really want to delete this contact?");
+            if(confirmation) {
+                yield take(_services.deleteContact(model.deletedId));
+                model.contactDeleted = true;
             }
         }
 
-        model.contact = data.contact;
+        // model.editedId = data.editedId;
+        // model.fetchingContact = data.fetchingContact;
+
+        // model.creatingContact = data.creatingContact;
+        // model.contactCreated = data.contactCreated;
+
+        // model.updatingContact = data.updatingContact;
+        // model.contactUpdated = data.contactUpdated;
+
+        // model.deletingContact = data.deletingContact;
+        // model.contactDeleted = data.contactDeleted;
+        // model.deletedId = data.deletedId;
+        // model.cancelCrud = data.cancelCrud;
+
+        // if(model.deletingContact) {
+        //     let confirm = window.confirm("Do you really want to delete this contact?");
+        //     if(confirm) {
+        //         model.okForDeleting = true;
+        //     } else {
+        //         model.okForDeleting = false;
+        //         model.cancelCrud = true;
+        //     }
+        // }
+
+        // model.contact = data.contact;
 
         putAsync(chOut, model);
     }
 });
 
-module.exports = { in: chIn, out: chOut, init };
+module.exports = { in: chIn, out: chOut, init, setServices };
