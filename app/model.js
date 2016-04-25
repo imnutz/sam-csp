@@ -82,33 +82,7 @@ go(function* present() {
                 model.contactDeleted = true;
             }
         }
-
-        // model.editedId = data.editedId;
-        // model.fetchingContact = data.fetchingContact;
-
-        // model.creatingContact = data.creatingContact;
-        // model.contactCreated = data.contactCreated;
-
-        // model.updatingContact = data.updatingContact;
-        // model.contactUpdated = data.contactUpdated;
-
-        // model.deletingContact = data.deletingContact;
-        // model.contactDeleted = data.contactDeleted;
-        // model.deletedId = data.deletedId;
-        // model.cancelCrud = data.cancelCrud;
-
-        // if(model.deletingContact) {
-        //     let confirm = window.confirm("Do you really want to delete this contact?");
-        //     if(confirm) {
-        //         model.okForDeleting = true;
-        //     } else {
-        //         model.okForDeleting = false;
-        //         model.cancelCrud = true;
-        //     }
-        // }
-
-        // model.contact = data.contact;
-
+        
         putAsync(chOut, model);
     }
 });
